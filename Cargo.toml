@@ -1,0 +1,59 @@
+[package]
+name = "rust-esp-starter"
+version = "0.1.0"
+authors = ["stewlab"]
+edition = "2021"
+resolver = "2"
+rust-version = "1.77"
+license = "MIT"
+
+[[bin]]
+name = "rust-esp-starter"
+harness = false # do not use the built in cargo test harness -> resolve rust-analyzer errors
+
+[profile.release]
+opt-level = "s"
+
+[profile.dev]
+debug = true    # Symbols are nice and they don't increase the size on Flash
+opt-level = "z"
+
+[features]
+default = ["display-support", "graphics-support", "experimental"]
+display-support = ["dep:embedded-hal"]
+# display-support = []
+graphics-support = ["dep:embedded-hal", "dep:embedded-graphics", "dep:display-interface-spi", "dep:st7789", "dep:embedded-graphics-core"]
+# graphics-support = ["dep:embedded-graphics", "dep:display-interface-spi", "dep:st7789", "dep:embedded-graphics-core"]
+
+experimental = ["esp-idf-svc/experimental"]
+
+[dependencies]
+log = "0.4"
+esp-idf-svc = { version = "0.51.0", features = ["critical-section", "embassy-time-driver", "embassy-sync", "alloc", "experimental"] }
+esp-idf-sys = { version = "0.36.1", features = ["binstart"] }
+esp-idf-hal = { version = "0.45.2" }
+anyhow = "1.0.98"
+embedded-hal = { version = "1.0.0", optional = true }
+# embedded-graphics = { version = "0.8.1", optional = true }
+# display-interface-spi = { version = "0.5.0", optional = true }
+embedded-graphics = { version = "0.7.1", optional = true } # Last version using EGC 0.3
+display-interface-spi = { version = "0.4.1", optional = true } # Compatible with DI 0.4
+# st7789 = { version = "0.8.0",  optional = true }
+st7789 = { git = "https://github.com/almindor/st7789", features = ["graphics"], optional = true } # Use main branch from GitHub
+# embedded-graphics-core = { version = "0.4.0", optional = true }
+embedded-graphics-core = { version = "0.3.3", optional = true } # Required by st7789 v0.7.0 & eg 0.7.1
+# embedded-graphics = "0.8.1"
+# ili9341 = "0.6.0"
+# xpt2046 = "0.3.0"
+# embedded-hal = "1.0.0"
+
+[build-dependencies]
+embuild = "0.33"
+
+
+# [patch.crates-io]
+# # Force everyone to use the same display-interface (0.4.1) that st7789@0.7 and disp-iface-spi@0.5 share
+# display-interface = { version = "0.4.1", package = "display-interface" }
+
+# # Force everyone to use the same embedded-graphics-core (0.3.3) that st7789@0.7 uses
+# embedded-graphics-core = { version = "0.3.3", package = "embedded-graphics-core" }
