@@ -9,12 +9,13 @@ A modern, battery-efficient Rust starter template for ESP32 microcontrollers usi
 ## 📋 Table of Contents
 
 - [Features](#-features)
+- [Code Documentation & Style](#-code-documentation--style)
 - [Prerequisites](#-prerequisites)
 - [Getting Started](#-getting-started)
 - [Usage](#-usage)
 - [Feature Flags](#-feature-flags)
+- [Project Structure](#-project-structure)
 - [Documentation](#-documentation)
-- [Code Documentation & Style](#-code-documentation--style)
 - [Contributing](#-contributing)
 - [License](#-license)
 
@@ -31,15 +32,43 @@ A modern, battery-efficient Rust starter template for ESP32 microcontrollers usi
 
 ---
 
+## 🧰 Code Documentation & Style
+
+- **File-level docs:** Use `//!` comments at the top of each `*.rs` file.
+- **Function docs:** Use `///` comments for public APIs (`pub fn run()`).
+- **License:** Declared once in [LICENSE](LICENSE) and `Cargo.toml` (`license = "MIT"`). No per-file license header needed.
+- **Formatting:** Run `cargo fmt` before commit.
+- **Docs:** Generate with `cargo doc --open`.
+
+---
 
 ## 🛠 Prerequisites
 
-1. **Rust Toolchain**  
+> 🎯 **Container Setup (Podman)**  
+> The project includes a `Containerfile` that installs Rust, ESP-IDF, and all necessary tools. It’s designed to be **generic**: mount **any** Rust project into `/workspace` and build/debug it inside the container.
+>
+> Build and run:
+>
+> ```bash
+> # build image from Containerfile
+> podman build -t rust-esp-starter .
+> 
+> # start a development container (replace $(pwd) w/ your project root)
+> podman run --rm -it -v "$(pwd)":/workspace rust-esp-starter
+> # or, if getting permission errors 
+> podman run --rm -it -v "$(pwd)":/workspace:Z -w /workspace rust-esp-starter
+> ```
+>
+> Inside, your working directory is `/workspace`. Run your usual commands (e.g., `cargo build`, `cargo espflash`, etc.).
+>
+> Exit with `exit` when done.
+
+1. **Rust Toolchain****  
    - Install [rustup](https://rustup.rs/) (requires Rust ≥ 1.70).  
    - Set your default to `stable`:  
      ```bash
      rustup default stable
-     ```
+     ```  
    - Add the Xtensa target for ESP32:  
      ```bash
      rustup target add xtensa-esp32-none-elf
@@ -100,16 +129,12 @@ A modern, battery-efficient Rust starter template for ESP32 microcontrollers usi
 
 4. **Build the Project**:  
    ```bash
-   cargo build
-
-   # or
-
    ESP_IDF_PATH="$HOME/esp/esp-idf" cargo build
    ```
 
 5. **Flash to the Device**:  
    ```bash
-   cargo espflash flash -p /dev/ttyUSB0
+   ESP_IDF_PATH="$HOME/esp/esp-idf" cargo espflash flash -p /dev/ttyUSB0
    ```
 
 6. **Monitor Serial Output**:  
@@ -131,6 +156,12 @@ fn main() {
 }
 ```
 
+You can also pass cargo features:
+
+```bash
+cargo espflash --release --features "display-support graphics-support"
+```
+
 ---
 
 ## 🏷 Feature Flags
@@ -143,6 +174,24 @@ fn main() {
 
 ---
 
+## 🗂 Project Structure
+
+```
+├── Containerfile           # Podman container recipe
+├── Cargo.toml
+├── sdkconfig.defaults
+├── src
+│   ├── main.rs          # Entry point
+│   └── apps             # Example applications
+│       ├── hello_app.rs
+│       ├── led_blinking_app.rs
+│       └── ...
+├── .github/workflows    # CI configuration
+└── LICENSE              # MIT License
+```
+
+---
+
 ## 📖 Documentation
 
 - Generate API docs with:
@@ -151,16 +200,6 @@ fn main() {
   cargo doc --open
   ```
 - Browse `docs/` for additional guides (coming soon).
-
----
-
-## 🧰 Code Documentation & Style
-
-- **File-level docs:** Use `//!` comments at the top of each `*.rs` file.
-- **Function docs:** Use `///` comments for public APIs (`pub fn run()`).
-- **License:** Declared once in [LICENSE](LICENSE) and `Cargo.toml` (`license = "MIT"`). No per-file license header needed.
-- **Formatting:** Run `cargo fmt` before commit.
-- **Docs:** Generate with `cargo doc --open`.
 
 ---
 
