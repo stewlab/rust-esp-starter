@@ -12,7 +12,6 @@ This project was originally generated from [esp-rs/esp-idf-template](https://git
 ## 📋 Table of Contents
 
 - [Features](#-features)
-- [Code Documentation & Style](#-code-documentation--style)
 - [Prerequisites](#-prerequisites)
 - [Getting Started](#-getting-started)
 - [Usage](#-usage)
@@ -32,16 +31,6 @@ This project was originally generated from [esp-rs/esp-idf-template](https://git
 - Works seamlessly with Cargo, `esp-idf-sys`, and `esp-idf-hal`
 - CI integration via GitHub Actions
 - Well-documented codebase with Rust doc comments
-
----
-
-## 🧰 Code Documentation & Style
-
-- **File-level docs:** Use `//!` comments at the top of each `*.rs` file.
-- **Function docs:** Use `///` comments for public APIs (`pub fn run()`).
-- **License:** Declared once in [LICENSE](LICENSE) and `Cargo.toml` (`license = "MIT"`). No per-file license header needed.
-- **Formatting:** Run `cargo fmt` before commit.
-- **Docs:** Generate with `cargo doc --open`.
 
 ---
 
