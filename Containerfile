@@ -25,7 +25,11 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --no-modify-path --default-tool
       aarch64-linux-android \
       armv7-linux-androideabi \
       aarch64-apple-ios \
-      wasm32-unknown-unknown
+      wasm32-unknown-unknown \
+      xtensa-esp32-none-elf
+
+# Install helper Cargo tools: cargo-espflash & cargo-embed
+RUN cargo install cargo-espflash cargo-embed
 
 # Install espup for Xtensa (ESP32) support
 RUN cargo install espup && \
@@ -40,7 +44,7 @@ ENV PATH=$ESP_IDF_PATH/tools:$PATH
 
 # Workspace directory: mount your project here
 WORKDIR /workspace
-# COPY . /workspace
+# NOTE: source is not copied; mount your project volume to /workspace at runtime
 
 # Default to interactive shell: run 'cargo build', 'cargo espflash', etc.
 CMD ["/bin/bash"]

@@ -2,9 +2,12 @@
 
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 
-A modern, battery-efficient Rust starter template for ESP32 microcontrollers using Espressif's ESP-IDF and the esp-rs ecosystem. Perfect for embedded Rust hacking, prototypes, and production builds.
+**Battery-optimized Rust starter for ESP32**, seamlessly integrating Espressif’s ESP-IDF and the esp-rs ecosystem to accelerate development from prototype to production.
+
+This project was originally generated from [esp-rs/esp-idf-template](https://github.com/esp-rs/esp-idf-template).
 
 ---
+
 
 ## 📋 Table of Contents
 
@@ -63,86 +66,58 @@ A modern, battery-efficient Rust starter template for ESP32 microcontrollers usi
 >
 > Exit with `exit` when done.
 
-1. **Rust Toolchain****  
-   - Install [rustup](https://rustup.rs/) (requires Rust ≥ 1.70).  
-   - Set your default to `stable`:  
-     ```bash
-     rustup default stable
-     ```  
-   - Add the Xtensa target for ESP32:  
-     ```bash
-     rustup target add xtensa-esp32-none-elf
-     ```
+<!-- This project includes a `Containerfile` that installs all required tools:
 
-2. **ESP-IDF**  
-   - Clone Espressif's [ESP-IDF (v4.x or later)](https://github.com/espressif/esp-idf):  
-     ```bash
-     git clone --recursive https://github.com/espressif/esp-idf.git
-     cd esp-idf
-     ./install.sh
-     ```  
-   - Requires Python ≥ 3.7 and Git ≥ 2.20.
-
-3. **ESP-IDF Environment**  
-   - Source the environment variables in each shell session:  
-     ```bash
-     . $ESP_IDF_PATH/export.sh
-     ```
-
-4. **Cargo Flash & Debug Tools**  
-   - Install helper tools:  
-     ```bash
-     cargo install cargo-espflash   # Flash & monitor
-     cargo install cargo-embed      # Embedded debugger
-     ```  
-   - (Optional) Install OpenOCD for JTAG debugging:  
-     ```bash
-     sudo apt install openocd
-     ```
-
-5. **Xtensa GCC Toolchain**  
-   - Ensure `xtensa-esp32-elf-gcc --version` shows v8.x+  
-   - If not installed system-wide, configure via `RUST_TARGET_PATH`
-
-6. **Development Environment (Optional)**  
-   - Recommended: Visual Studio Code with [rust-analyzer](https://github.com/rust-lang/rust-analyzer) and Espressif extensions for ESP-IDF.
-
+- Rust toolchain and targets (desktop, mobile, embedded)
+- ESP-IDF (via official install.sh)
+- Xtensa toolchain for ESP32 (`espup`)
+- Flashing and debug tools: `cargo-espflash`, `cargo-embed`
+- Optional OpenOCD (JTAG support) -->
 ---
 
 ## 🚀 Getting Started
 
+
+
 1. **Clone the template**:
 
    ```bash
-   git clone https://github.com/yourusername/rust-esp-starter.git
+   git clone https://github.com/stewlab/rust-esp-starter.git
    cd rust-esp-starter
    ```
-2. **Configure your board** (optional):  
+
+2. **🚀 Build & Launch the Container**  
+
+   > See [Prerequisites](#-prerequisites)
+
+   > **Note**: remaining steps should be performed inside the development container
+
+
+3. **Configure your board** (optional):  
    Copy and edit `sdkconfig.defaults` for your ESP32 module.
 
-3. **Set up your environment**:  
+4. **Set up your environment**:  
    Source environment scripts to configure ESP-IDF and Rust targets:
    ```bash
    . $HOME/export-esp.sh       # Exports custom toolchain vars
    . $ESP_IDF_PATH/export.sh   # ESP-IDF environment variables
    ```
 
-4. **Build the Project**:  
+5. **Build the Project**:  
    ```bash
-   ESP_IDF_PATH="$HOME/esp/esp-idf" cargo build
+   cargo build
    ```
 
-5. **Flash to the Device**:  
+6. **Flash to the Device**:  
    ```bash
-   ESP_IDF_PATH="$HOME/esp/esp-idf" cargo espflash flash -p /dev/ttyUSB0
+   cargo espflash flash -p /dev/ttyUSB0
    ```
 
-6. **Monitor Serial Output**:  
+7. **Monitor Serial Output**:  
    ```bash
    espflash monitor
    ```
    Use `Ctrl+R` to reset the device.
-
 ---
 
 ## ⚙️ Usage
