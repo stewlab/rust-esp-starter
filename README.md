@@ -43,25 +43,18 @@ This project was originally generated from [esp-rs/esp-idf-template](https://git
 >
 > ```bash
 > # build image from Containerfile
-> podman build -t rust-esp-starter .
+> podman build -t rust-esp-env .
 > 
 > # start a development container (replace $(pwd) w/ your project root)
-> podman run --rm -it -v "$(pwd)":/workspace rust-esp-starter
-> # or, if getting permission errors 
-> podman run --rm -it -v "$(pwd)":/workspace:Z -w /workspace rust-esp-starter
+> podman run --rm -it -v "$(pwd)":/workspace rust-esp-env
+> # or try the following if getting permission errors (:Z turns on SELinux relabeling)
+> podman run --rm -it -v "$(pwd)":/workspace:Z -w /workspace rust-esp-env
 > ```
 >
 > Inside, your working directory is `/workspace`. Run your usual commands (e.g., `cargo build`, `cargo espflash`, etc.).
 >
 > Exit with `exit` when done.
 
-<!-- This project includes a `Containerfile` that installs all required tools:
-
-- Rust toolchain and targets (desktop, mobile, embedded)
-- ESP-IDF (via official install.sh)
-- Xtensa toolchain for ESP32 (`espup`)
-- Flashing and debug tools: `cargo-espflash`, `cargo-embed`
-- Optional OpenOCD (JTAG support) -->
 ---
 
 ## 🚀 Getting Started
@@ -85,7 +78,7 @@ This project was originally generated from [esp-rs/esp-idf-template](https://git
 3. **Configure your board** (optional):  
    Copy and edit `sdkconfig.defaults` for your ESP32 module.
 
-4. **Set up your environment**:  
+4. **Set up your environment**:
    Source environment scripts to configure ESP-IDF and Rust targets:
    ```bash
    . $HOME/export-esp.sh       # Exports custom toolchain vars
@@ -97,12 +90,15 @@ This project was originally generated from [esp-rs/esp-idf-template](https://git
    cargo build
    ```
 
-6. **Flash to the Device**:  
+6. **Deploy to QEMU**
+   > modify and run `start_qemu.sh`
+
+7. **Flash to the Device**:  
    ```bash
    cargo espflash flash -p /dev/ttyUSB0
    ```
 
-7. **Monitor Serial Output**:  
+8. **Monitor Serial Output**:  
    ```bash
    espflash monitor
    ```
@@ -144,6 +140,9 @@ cargo espflash --release --features "display-support graphics-support"
 ├── Containerfile        # Podman container recipe
 ├── Cargo.toml
 ├── sdkconfig.defaults
+├── build.sh
+├── start_qemu.sh
+...
 ├── src
 │   ├── main.rs          # Entry point
 │   └── apps             # Example applications
