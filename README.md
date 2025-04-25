@@ -152,7 +152,7 @@ cargo espflash --release --features "display-support graphics-support"
 ## 🗂 Project Structure
 
 ```
-├── Containerfile           # Podman container recipe
+├── Containerfile        # Podman container recipe
 ├── Cargo.toml
 ├── sdkconfig.defaults
 ├── src
@@ -205,4 +205,3 @@ The license is also declared in `Cargo.toml`:
 [package]
 license = "MIT"
 ```
-
