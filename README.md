@@ -1,195 +1,132 @@
 # rust-esp-starter
 
-![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**Battery-optimized Rust starter for ESP32**, seamlessly integrating Espressif’s ESP-IDF and the esp-rs ecosystem to accelerate development from prototype to production.
-
+**Rust starter for ESP32 integrating Espressif’s ESP-IDF with the esp-rs ecosystem.**  
 This project was originally generated from [esp-rs/esp-idf-template](https://github.com/esp-rs/esp-idf-template).
 
 ---
 
+## Features
 
-## 📋 Table of Contents
-
-- [Features](#-features)
-- [Prerequisites](#-prerequisites)
-- [Getting Started](#-getting-started)
-- [Usage](#-usage)
-- [Feature Flags](#-feature-flags)
-- [Project Structure](#-project-structure)
-- [Documentation](#-documentation)
-- [Contributing](#-contributing)
-- [License](#-license)
+- Abstractions for ESP32 peripherals
+- Optional modules: display, graphics
+- Examples: `hello_app`, `led_blinking_app`, `graphics_app`, etc.
+- Integration with Cargo, `esp-idf-sys`, `esp-idf-hal`
 
 ---
 
-## 🔧 Features
+## Prerequisites
 
-- Zero-cost abstractions for ESP32 peripherals
-- Optional modules for display, graphics, and RTOS shell
-- Multiple example apps: `hello_app`, `led_blinking_app`, `graphics_app`, and more
-- Works seamlessly with Cargo, `esp-idf-sys`, and `esp-idf-hal`
-- CI integration via GitHub Actions
-- Well-documented codebase with Rust doc comments
+- Podman (or Docker)
+- Rust toolchain (stable)
+- ESP32 toolchain
 
----
+### Container Setup (Podman)
 
-## 🛠 Prerequisites
+```bash
+podman build -t rust-esp-env .
+podman run --rm -it \
+  -v "$(pwd)":/workspace:Z \
+  -w /workspace \
+  rust-esp-env
+```
 
-> 🎯 **Container Setup (Podman)**  
-> The project includes a `Containerfile` that installs Rust, ESP-IDF, and all necessary tools. It’s designed to be **generic**: mount **any** Rust project into `/workspace` and build/debug it inside the container.
->
-> Build and run:
->
-> ```bash
-> # build image from Containerfile
-> podman build -t rust-esp-env .
-> 
-> # start a development container (replace $(pwd) w/ your project root)
-> podman run --rm -it -v "$(pwd)":/workspace rust-esp-env
-> # or try the following if getting permission errors (:Z turns on SELinux relabeling)
-> podman run --rm -it -v "$(pwd)":/workspace:Z -w /workspace rust-esp-env
-> ```
->
-> Inside, your working directory is `/workspace`. Run your usual commands (e.g., `cargo build`, `cargo espflash`, etc.).
->
-> Exit with `exit` when done.
+Inside the container, `/workspace` is your project root. Run commands like `cargo build` and `cargo espflash`, then exit.
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
-
-
-1. **Clone the template**:
+1. **Clone the repository**
 
    ```bash
    git clone https://github.com/stewlab/rust-esp-starter.git
    cd rust-esp-starter
    ```
 
-2. **🚀 Build & Launch the Container**  
+2. **(Optional) Build and launch the development container**
 
-   > See [Prerequisites](#-prerequisites)
-
-   > **Note**: remaining steps should be performed inside the development container
-
-
-3. **Configure your board** (optional):  
-   Copy and edit `sdkconfig.defaults` for your ESP32 module.
-
-4. **Set up your environment**:
-   Source environment scripts to configure ESP-IDF and Rust targets:
    ```bash
-   . $HOME/export-esp.sh       # Exports custom toolchain vars
-   . $ESP_IDF_PATH/export.sh   # ESP-IDF environment variables
+   # Build the container image (run once, unless Containerfile changes)
+   podman build -t rust-esp-env .
+
+   # Start a dev container
+   podman run --rm -it \
+     -v "$(pwd)":/workspace:Z \
+     -w /workspace \
+     rust-esp-env
    ```
 
-5. **Build the Project**:  
+   Inside the container, `/workspace` is your project root.
+
+3. **Build the project**
+
    ```bash
    cargo build
    ```
 
-6. **Deploy to QEMU**
-   > modify and run `start_qemu.sh`
+4. **Configure** *(optional)*
 
-7. **Flash to the Device**:  
+   * Customize `sdkconfig.defaults` for your board
+
+5. **Flash & Monitor:**
+
    ```bash
    cargo espflash flash -p /dev/ttyUSB0
-   ```
-
-8. **Monitor Serial Output**:  
-   ```bash
    espflash monitor
    ```
-   Use `Ctrl+R` to reset the device.
----
 
-## ⚙️ Usage
-
-By default, `hello_app` runs. To enable other apps, edit `src/main.rs`:
-
-```rust
-fn main() {
-    // Run the LED blinking example
-    crate::apps::led_blinking_app::run().unwrap();
-}
-```
-
-You can also pass cargo features:
-
-```bash
-cargo espflash --release --features "display-support graphics-support"
-```
+   Press **Ctrl+R** to reset the device.
 
 ---
 
-## 🏷 Feature Flags
+## Usage
 
-| Feature            | Description                           |
-| ------------------ | ------------------------------------- |
-| `display-support`  | Enables display and backlight modules |
-| `graphics-support` | Enables embedded-graphics examples    |
-| `rtos-shell`       | Enables RTOS shell application        |
+* By default, `hello_app` runs. To use another example, edit `src/main.rs`:
 
----
+  ```rust
+  fn main() {
+      crate::apps::led_blinking_app::run().unwrap();
+  }
+  ```
 
-## 🗂 Project Structure
-
-```
-├── Containerfile        # Podman container recipe
-├── Cargo.toml
-├── sdkconfig.defaults
-├── build.sh
-├── start_qemu.sh
-...
-├── src
-│   ├── main.rs          # Entry point
-│   └── apps             # Example applications
-│       ├── hello_app.rs
-│       ├── led_blinking_app.rs
-│       └── ...
-├── .github/workflows    # CI configuration
-└── LICENSE              # MIT License
-```
-
----
-
-## 📖 Documentation
-
-- Generate API docs with:
+* Enable features with Cargo:
 
   ```bash
-  cargo doc --open
+  cargo espflash --release --features "display-support graphics-support"
   ```
-- Browse `docs/` for additional guides (coming soon).
 
 ---
 
-## 🤝 Contributing
+## Feature Flags
 
-Contributions are welcome! Please open issues or pull requests against `main`.  
-Ensure all new code is documented, formatted (`cargo fmt`), and tested where applicable.
+| Flag               | Description                 |
+| ------------------ | --------------------------- |
+| `display-support`  | Display & backlight modules |
+| `graphics-support` | Embedded‑graphics examples  |
 
 ---
 
-## ✅ Tested Devices
+## Contributing
 
-This starter has been tested with the following device(s):
+Contributions welcome:
 
-| Device         | Link                                                                 |
-|----------------|----------------------------------------------------------------------|
-| ESP32-2432S028 | [AliExpress](https://www.aliexpress.com/item/1005006470918908.html) |
+1. Fork the repo
+2. Create a branch
+3. Run `cargo fmt`, add tests/docs
+4. Open a PR to `main`
 
-Tested on **Ubuntu 24.04.2 LTS** via **Podman container** with **Distrobox**.
+---
 
-## 📜 License
+## Tested Devices
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+* **ESP32-2432S028** ([AliExpress](https://www.aliexpress.com/item/1005006470918908.html))
 
-The license is also declared in `Cargo.toml`:
+Tested on Ubuntu 24.04.2 via Podman
 
-```toml
-[package]
-license = "MIT"
-```
+---
+
+## License
+
+MIT License. See [LICENSE](LICENSE).
